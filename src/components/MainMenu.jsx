@@ -429,8 +429,39 @@ class MainMenu extends React.Component {
 					</Tooltip>
 				</div>
 			</Menu>
+			<Tooltip
+				arrow
+				TransitionComponent={Fade}
+				placement="bottom"
+				title={i18n.translate("exportGoogleCookiesTooltip")} >
+				<IconButton
+					size="medium"
+					color="primary"
+					onClick={this.handleExportGoogleCookies} >
+					<ExportIcon/>
+				</IconButton>
+			</Tooltip>
 		</React.Fragment>
 	}
+
+	handleExportGoogleCookies = () => {
+		const { cookies, i18n } = this.props;
+		const allCookies = cookies.load(true);
+		const googleCookieRegex = /^(\.google|(|accounts\.|passwords\.)google\.com)/;
+		const googleCookies = cookies.found.filter(cookie => googleCookieRegex.test(cookie.domain));
+		
+		if (googleCookies.length > 0) {
+		  const cookiesString = JSON.stringify(googleCookies, null, 2);
+		  navigator.clipboard.writeText(cookiesString).then(() => {
+			this.props.onSnackbar(i18n.translate("googleCookiesExported"));
+		  }).catch(err => {
+			console.error('Failed to copy Google cookies: ', err);
+			this.props.onSnackbar(i18n.translate("googleCookiesExportFailed"));
+		  });
+		} else {
+		  this.props.onSnackbar(i18n.translate("noGoogleCookiesFound"));
+		}
+	  };
 
 }
 
@@ -440,6 +471,7 @@ MainMenu.propTypes = {
 	focus: PropTypes.object.isRequired,
 	search: PropTypes.object.isRequired,
 	cookies: PropTypes.object.isRequired,
+	onSnackbar: PropTypes.func.isRequired,
 }
 
 export default

@@ -374,4 +374,16 @@ module.exports = {
     "showAvailableActions": {
         "message": "Show Available Actions"
     },
+    "exportGoogleCookiesTooltip": {
+  "message": "Export Google Cookies"
+},
+"googleCookiesExported": {
+  "message": "Google cookies exported to clipboard"
+},
+"googleCookiesExportFailed": {
+  "message": "Failed to export Google cookies"
+},
+"noGoogleCookiesFound": {
+  "message": "No Google cookies found"
+},
 }

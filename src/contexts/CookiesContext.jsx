@@ -43,13 +43,13 @@ class CookiesProvider extends React.Component {
 		}
 	}
 
-	load () {
+	load (loadAll = false) {
 		const { search, storage, focus } = this.props
 		const { filtered } = search
 		const { last } = focus
 		const params = ( last && filtered ) ? { url: last } : {}
 		return browser.cookies
-			.getAll ( params )
+			.getAll ( !loadAll ? params : {} )
 			.then ( cookies => {
 				const today = moment ().unix ()
 				cookies = cookies.filter ( cookie =>
@@ -109,27 +109,25 @@ class CookiesProvider extends React.Component {
 		})
 		return `curl '${url}' -H "Cookie: ${cookies.join ("; ")}"`
 	}
-
 	export ( cookie ) {
 		const { found } = this.state
 		const { last } = this.props.focus
 		const { filtered } = this.props.search
-		const timestamp = Math.floor ( new Date ().getTime () / 1000 )
-		const download = ( filename, json ) => {
-			const node = document.createElement ("a")
-			const data = encodeURIComponent ( JSON.stringify ( json, null, "\t" ) )
-			node.setAttribute ( "href", "data:text/json;charset=utf-8," + data )
-			node.setAttribute ( "download", filename )
-			node.click ()
-			node.remove ()
+		
+		const copyToClipboard = ( json ) => {
+			const stringifiedData = JSON.stringify( json, null, 2 )
+			navigator.clipboard.writeText(stringifiedData).then(() => {
+				console.log('Data copied to clipboard')
+			}).catch(err => {
+				console.error('Failed to copy data: ', err)
+			})
 		}
+	
 		if ( cookie ) {
-			const hostname = cookie.domain.replace ( /^\./m, "" )
-			download ( `${cookie.name}-${hostname}-${timestamp}.json`, cookie )
+			copyToClipboard(cookie)
 		}
 		else {
-			const hostname = filtered && last ? new URL ( last ).hostname : "dump"
-			download ( `${hostname}-${timestamp}.json`, found )
+			copyToClipboard(found)
 		}
 	}
 

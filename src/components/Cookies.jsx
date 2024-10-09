@@ -37,7 +37,10 @@ const styles = theme => ({
 })
 
 class Cookies extends React.Component {
-
+	handleSnackbar = (message) => {
+		// Implement snackbar logic here, or use an existing snackbar component if available
+		console.log(message); // Temporary fallback
+	};
 	render () {
 		const { classes, storage, search, cookies, onCreate, onItemClick, i18n } = this.props
 		var items = _.sortBy ( cookies.found, o => storage.data.sortType === "expirationDate"

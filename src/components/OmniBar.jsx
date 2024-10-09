@@ -73,7 +73,15 @@ class OmniBar extends React.Component {
 			focused: true,
 		}
 	}
-
+	componentDidMount() {
+		// Set filtered to false when the component mounts
+		this.props.search.set("filtered", false);
+		console.log('omg omg omg')
+	  }
+	handleSnackbar = (message) => {
+		// Implement your snackbar logic here
+		console.log(message); // Temporary fallback
+	  }
 	render () {
 		const { classes, storage, focus, search, cookies, theme, i18n } = this.props
 		const { focused } = this.state
@@ -189,7 +197,7 @@ class OmniBar extends React.Component {
 				className={classes.divider}
 				orientation="vertical"
 			/>
-			<MainMenu/>
+			<MainMenu onSnackbar={this.handleSnackbar}/>
 		</Paper>
 	}
 
